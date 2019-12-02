@@ -12,4 +12,5 @@ dependencies {
 
     //modules
     implementation project(Modules.network)
+    implementation project(Modules.abstraction)
 }

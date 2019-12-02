@@ -10,6 +10,9 @@ dependencies {
     //network
     implementation Retrofit.retrofit
 
+    //utilities
+    implementation Android.gson
+
     //coroutines
     implementation Coroutines.core
     implementation Jetpack.lifecycle

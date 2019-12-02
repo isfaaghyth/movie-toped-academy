@@ -12,6 +12,7 @@ import isfaaghyth.app.abstraction.base.BaseActivity
 import isfaaghyth.app.abstraction.util.AppLink.MovieDetail.MOVIE_DETAIL
 import isfaaghyth.app.abstraction.util.AppLink.MovieDetail.PARAM_MOVIE_ID
 import isfaaghyth.app.abstraction.util.AppLink.MovieDetail.PARAM_TYPE
+import isfaaghyth.app.abstraction.util.session.SessionUtil
 import isfaaghyth.app.abstraction.util.ext.hide
 import isfaaghyth.app.abstraction.util.ext.load
 import isfaaghyth.app.abstraction.util.ext.show
@@ -39,6 +40,13 @@ class MovieDetailActivity: BaseActivity(), MovieRatingBottomSheet.BottomSheetLis
 
     private lateinit var bottomSheet: MovieRatingBottomSheet
     private var movieId: String = ""
+
+    lateinit var sessionUtil: SessionUtil
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sessionUtil = SessionUtil(this)
+    }
 
     override fun initView() {
         viewModel = ViewModelProviders
@@ -119,7 +127,7 @@ class MovieDetailActivity: BaseActivity(), MovieRatingBottomSheet.BottomSheetLis
 
     override fun onButtonClicked(stars: Float) {
         if (bottomSheet.isVisible) bottomSheet.dismiss()
-        viewModel.rateMovie(movieId, stars.toInt() * 2)
+        viewModel.rateMovie(movieId, stars.toInt() * 2, sessionUtil.getGuestSessionId())
     }
 
     private fun showCast(movieCast: List<MovieCast>) {

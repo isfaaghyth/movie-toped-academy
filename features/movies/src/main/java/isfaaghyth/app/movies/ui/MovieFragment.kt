@@ -15,18 +15,25 @@ import isfaaghyth.app.movies.R
 import isfaaghyth.app.movies.di.DaggerMovieComponent
 import kotlinx.android.synthetic.main.fragment_movie.*
 import javax.inject.Inject
+import isfaaghyth.app.abstraction.util.session.GuestSessionResponse
+import isfaaghyth.app.abstraction.util.DateUtil
+import isfaaghyth.app.abstraction.util.session.SessionUtil
 
-class MovieFragment: Fragment() {
+
+class MovieFragment : Fragment() {
 
     private fun contentView(): Int = R.layout.fragment_movie
 
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: MovieViewModel
 
     private var movieData = arrayListOf<Movie>()
     private val adapter: MovieAdapter by lazy {
         MovieAdapter(movieData)
     }
+
+    lateinit var sessionUtil: SessionUtil
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(contentView(), container, false)
@@ -45,7 +52,19 @@ class MovieFragment: Fragment() {
 
         lstMovies.adapter = adapter
 
+        getGuestSessionId()
+
         initObserver()
+    }
+
+    private fun getGuestSessionId() {
+        activity?.let {
+            sessionUtil = SessionUtil(it)
+            val guestSessionExpiredTime = sessionUtil.getSessionExpiredTime()
+            if (guestSessionExpiredTime == null || guestSessionExpiredTime.before(DateUtil.now())) {
+                viewModel.getGuestSessionId()
+            }
+        }
     }
 
     private fun initObserver() {
@@ -64,6 +83,10 @@ class MovieFragment: Fragment() {
         viewModel.error.observe(this, Observer { error ->
             toast(error)
         })
+
+        viewModel.guestSessionResult.observe(this, Observer {
+            if (it.success) saveGuestSessionId(it)
+        })
     }
 
     private fun initInjector() {
@@ -76,6 +99,10 @@ class MovieFragment: Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         viewModel.clear()
+    }
+
+    private fun saveGuestSessionId(guestSessionResponse: GuestSessionResponse) {
+        sessionUtil.saveGuestSessionId(guestSessionResponse)
     }
 
 }

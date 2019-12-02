@@ -10,6 +10,6 @@ import retrofit2.Response
 interface MovieDetailRepository {
     suspend fun getMovieDetail(movieId: String): Response<Movie>
     suspend fun getTVShowDetail(movieId: String): Response<TVShow>
-    suspend fun rateMovie(movieId: String, starRating: RateMovieParam): Response<RateMovieResponse>
+    suspend fun rateMovie(movieId: String, starRating: RateMovieParam, guestId: String): Response<RateMovieResponse>
     suspend fun getMovieCredits(movieId: String): Response<Credits>
 }

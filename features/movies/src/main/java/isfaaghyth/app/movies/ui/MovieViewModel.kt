@@ -7,6 +7,7 @@ import isfaaghyth.app.abstraction.helper.FetchingIdlingResource
 import isfaaghyth.app.abstraction.util.state.LoaderState
 import isfaaghyth.app.abstraction.util.state.ResultState
 import isfaaghyth.app.abstraction.util.thread.SchedulerProvider
+import isfaaghyth.app.abstraction.util.session.GuestSessionResponse
 import isfaaghyth.app.data.entity.Movie
 import isfaaghyth.app.movies.domain.MovieUseCase
 import kotlinx.coroutines.Dispatchers
@@ -15,6 +16,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 interface MovieContract {
+    fun getGuestSessionId()
     fun getPopularMovie()
 }
 
@@ -35,6 +37,10 @@ class MovieViewModel @Inject constructor(
     val error: LiveData<String>
         get() = _error
 
+    private val _guestSessionResult = MutableLiveData<GuestSessionResponse>()
+    val guestSessionResult: LiveData<GuestSessionResponse>
+        get() = _guestSessionResult
+
     init {
         getPopularMovie()
     }
@@ -49,6 +55,22 @@ class MovieViewModel @Inject constructor(
                 _state.value = LoaderState.HideLoading
                 when (result) {
                     is ResultState.Success -> _result.postValue(result.data.resultsIntent)
+                    is ResultState.Error -> _error.postValue(result.error)
+                }
+            }
+        }
+    }
+
+    override fun getGuestSessionId() {
+        FetchingIdlingResource.begin()
+        _state.value = LoaderState.ShowLoading
+        launch {
+            val result = useCase.getGuestSessionId()
+            withContext(Dispatchers.Main) {
+                FetchingIdlingResource.complete()
+                _state.value = LoaderState.HideLoading
+                when(result) {
+                    is ResultState.Success -> _guestSessionResult.postValue(result.data)
                     is ResultState.Error -> _error.postValue(result.error)
                 }
             }

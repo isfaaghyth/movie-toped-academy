@@ -22,7 +22,7 @@ import javax.inject.Inject
 interface MovieDetailContract {
     fun getMovieDetail(movieId: String)
     fun getTVShowDetail(movieId: String)
-    fun rateMovie(movieId: String, starRating: Int)
+    fun rateMovie(movieId: String, starRating: Int, guestId: String)
 }
 
 class MovieDetailViewModel @Inject constructor(
@@ -96,11 +96,11 @@ class MovieDetailViewModel @Inject constructor(
         }
     }
 
-    override fun rateMovie(movieId: String, starRating: Int) {
+    override fun rateMovie(movieId: String, starRating: Int, guestId: String) {
         FetchingIdlingResource.begin()
         _state.value = LoaderState.ShowLoading
         launch {
-            val result = useCase.rateMovie(movieId, RateMovieParam(starRating))
+            val result = useCase.rateMovie(movieId, RateMovieParam(starRating), guestId)
             withContext(Dispatchers.Main) {
                 FetchingIdlingResource.complete()
                 _state.value = LoaderState.HideLoading

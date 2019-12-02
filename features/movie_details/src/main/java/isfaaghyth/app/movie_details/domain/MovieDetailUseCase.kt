@@ -38,10 +38,10 @@ class MovieDetailUseCase @Inject constructor(val repository: MovieDetailReposito
         }
     }
 
-    suspend fun rateMovie(movieId: String, starRating: RateMovieParam): ResultState<RateMovieResponse> {
+    suspend fun rateMovie(movieId: String, starRating: RateMovieParam, guestId: String): ResultState<RateMovieResponse> {
         return fetchState {
             wrapperDetail {
-                repository.rateMovie(movieId, starRating)
+                repository.rateMovie(movieId, starRating, guestId)
             }
         }
     }

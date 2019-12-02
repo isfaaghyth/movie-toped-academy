@@ -24,8 +24,8 @@ class MovieDetailRepositoryImpl @Inject constructor(
     override suspend fun getMovieCredits(movieId: String): Response<Credits> {
         return service.getMovieCredits(movieId)
     }
-    override suspend fun rateMovie(movieId: String, starRating: RateMovieParam): Response<RateMovieResponse> {
-        return service.rateMovie(movieId, starRating)
+    override suspend fun rateMovie(movieId: String, starRating: RateMovieParam, guestId: String): Response<RateMovieResponse> {
+        return service.rateMovie(movieId, starRating, guestId)
     }
 
 }
