@@ -208,7 +208,7 @@
                         android:ellipsize="none"
                         android:gravity="center_vertical"
                         android:scrollHorizontally="false"
-                        android:text="Recommended Movies"
+                        android:text="@string/recommended_movies_label"
                         android:id="@+id/recommendedLabel"
                         android:paddingBottom="6dp"
                         android:visibility="gone"
