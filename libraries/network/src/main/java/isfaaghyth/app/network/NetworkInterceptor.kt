@@ -10,6 +10,7 @@ class NetworkInterceptor: Interceptor {
         val url = request.url()
             .newBuilder()
             .addQueryParameter("api_key", BuildConfig.API_KEY)
+            .addQueryParameter("guest_session_id", "a246d82f2d38155a729952c60573f97d")
             .build()
         request = request.newBuilder().url(url).build()
         return chain.proceed(request)

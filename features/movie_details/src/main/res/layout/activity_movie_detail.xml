@@ -2,9 +2,9 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="match_parent">
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -197,4 +197,13 @@
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
+    <ImageView
+        android:id="@+id/rate_movie_button"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="16dp"
+        android:src="@mipmap/ic_rating"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="16dp"/>
 </RelativeLayout>

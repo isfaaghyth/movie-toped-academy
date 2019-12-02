@@ -1,6 +1,8 @@
 package isfaaghyth.app.movie_details.ui
 
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -21,13 +23,18 @@ import isfaaghyth.app.movie_details.di.DaggerMovieDetailComponent
 import kotlinx.android.synthetic.main.activity_movie_detail.*
 import javax.inject.Inject
 
+
+
 @DeepLink(MOVIE_DETAIL)
-class MovieDetailActivity: BaseActivity() {
+class MovieDetailActivity: BaseActivity(), MovieRatingBottomSheet.BottomSheetListener {
 
     override fun contentView(): Int = R.layout.activity_movie_detail
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: MovieDetailViewModel
+
+    private lateinit var bottomSheet: MovieRatingBottomSheet
+    private var movieId: String = ""
 
     override fun initView() {
         viewModel = ViewModelProviders
@@ -36,12 +43,14 @@ class MovieDetailActivity: BaseActivity() {
 
         initParam()
         initObservable()
+
+        rate_movie_button.setOnClickListener { showRatingBottomSheet() }
     }
 
     private fun initParam() {
         if (intent.getBooleanExtra(DeepLink.IS_DEEP_LINK, false)) {
             val parameters = intent.extras?: Bundle()
-            val movieId = parameters.getString(PARAM_MOVIE_ID)?: ""
+            movieId = parameters.getString(PARAM_MOVIE_ID)?: ""
 
             when(parameters.getString(PARAM_TYPE)) {
                 TYPE_MOVIE -> viewModel.getMovieDetail(movieId)
@@ -74,6 +83,10 @@ class MovieDetailActivity: BaseActivity() {
         })
 
         viewModel.error.observe(this, Observer { toast(it) })
+
+        viewModel.tvPostRatingStatus.observe(this, Observer { response ->
+            showRatingSuccess(response.statusMessage)
+        })
     }
 
     private fun showDetail(detail: MovieDetail) {
@@ -83,6 +96,22 @@ class MovieDetailActivity: BaseActivity() {
         txtContent.text = detail.overview
         txtRating.text = detail.voteCount.toString()
         txtVote.text = detail.voteAverage.toString()
+    }
+
+    private fun showRatingBottomSheet() {
+        if (!::bottomSheet.isInitialized || !bottomSheet.isVisible) {
+            bottomSheet = MovieRatingBottomSheet(this)
+            bottomSheet.show(supportFragmentManager, "exampleBottomSheet")
+        }
+    }
+
+    private fun showRatingSuccess(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onButtonClicked(stars: Float) {
+        if (bottomSheet.isVisible) bottomSheet.dismiss()
+        viewModel.rateMovie(movieId, stars.toInt() * 2)
     }
 
     override fun initInjector() {

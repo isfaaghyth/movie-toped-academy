@@ -1,6 +1,8 @@
 package isfaaghyth.app.data.repository.movie_detail
 
 import isfaaghyth.app.data.entity.Movie
+import isfaaghyth.app.data.entity.RateMovieParam
+import isfaaghyth.app.data.entity.RateMovieResponse
 import isfaaghyth.app.data.entity.TVShow
 import isfaaghyth.app.data.service.NetworkServices
 import retrofit2.Response
@@ -16,6 +18,10 @@ class MovieDetailRepositoryImpl @Inject constructor(
 
     override suspend fun getTVShowDetail(movieId: String): Response<TVShow> {
         return service.getTvDetail(movieId)
+    }
+
+    override suspend fun rateMovie(movieId: String, starRating: RateMovieParam): Response<RateMovieResponse> {
+        return service.rateMovie(movieId, starRating)
     }
 
 }

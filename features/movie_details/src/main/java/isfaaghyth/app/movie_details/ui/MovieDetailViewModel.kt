@@ -8,6 +8,8 @@ import isfaaghyth.app.abstraction.util.state.LoaderState
 import isfaaghyth.app.abstraction.util.state.ResultState
 import isfaaghyth.app.abstraction.util.thread.SchedulerProvider
 import isfaaghyth.app.data.entity.Movie
+import isfaaghyth.app.data.entity.RateMovieParam
+import isfaaghyth.app.data.entity.RateMovieResponse
 import isfaaghyth.app.data.entity.TVShow
 import isfaaghyth.app.movie_details.domain.MovieDetailUseCase
 import kotlinx.coroutines.Dispatchers
@@ -18,6 +20,7 @@ import javax.inject.Inject
 interface MovieDetailContract {
     fun getMovieDetail(movieId: String)
     fun getTVShowDetail(movieId: String)
+    fun rateMovie(movieId: String, starRating: Int)
 }
 
 class MovieDetailViewModel @Inject constructor(
@@ -40,6 +43,10 @@ class MovieDetailViewModel @Inject constructor(
     private val _state = MutableLiveData<LoaderState>()
     val state: LiveData<LoaderState>
         get() = _state
+
+    private val _tvPostRatingStatus = MutableLiveData<RateMovieResponse>()
+    val tvPostRatingStatus: LiveData<RateMovieResponse>
+        get() = _tvPostRatingStatus
 
     override fun getMovieDetail(movieId: String) {
         FetchingIdlingResource.begin()
@@ -67,6 +74,22 @@ class MovieDetailViewModel @Inject constructor(
                 _state.value = LoaderState.HideLoading
                 when (result) {
                     is ResultState.Success -> _tvDetail.postValue(result.data)
+                    is ResultState.Error -> _error.postValue(result.error)
+                }
+            }
+        }
+    }
+
+    override fun rateMovie(movieId: String, starRating: Int) {
+        FetchingIdlingResource.begin()
+        _state.value = LoaderState.ShowLoading
+        launch {
+            val result = useCase.rateMovie(movieId, RateMovieParam(starRating))
+            withContext(Dispatchers.Main) {
+                FetchingIdlingResource.complete()
+                _state.value = LoaderState.HideLoading
+                when (result) {
+                    is ResultState.Success -> _tvPostRatingStatus.postValue(result.data)
                     is ResultState.Error -> _error.postValue(result.error)
                 }
             }

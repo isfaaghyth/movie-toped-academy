@@ -1,13 +1,8 @@
 package isfaaghyth.app.data.service
 
-import isfaaghyth.app.data.entity.Movie
-import isfaaghyth.app.data.entity.Movies
-import isfaaghyth.app.data.entity.TVShow
-import isfaaghyth.app.data.entity.TVShows
+import isfaaghyth.app.data.entity.*
 import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface NetworkServices {
 
@@ -26,5 +21,10 @@ interface NetworkServices {
     suspend fun getTvDetail(
         @Path("movie_id") movieId: String
     ): Response<TVShow>
+
+    @POST("movie/{movie_id}/rating")
+    suspend fun rateMovie(
+        @Path("movie_id") movieId: String,
+        @Body value: RateMovieParam): Response<RateMovieResponse>
 
 }
