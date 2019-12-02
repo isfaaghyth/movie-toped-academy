@@ -4,6 +4,7 @@ import isfaaghyth.app.data.entity.*
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface NetworkServices {
 
@@ -22,6 +23,9 @@ interface NetworkServices {
     suspend fun getMovieCredits(
         @Path("movie_id") movieId: String
     ): Response<Credits>
+
+    @GET("discover/movie")
+    suspend fun getMovieCreditsByGenre(@Query("with_genres") genres: String): Response<Movies>
 
     @GET("tv/{movie_id}")
     suspend fun getTvDetail(

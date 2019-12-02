@@ -9,6 +9,7 @@ import isfaaghyth.app.abstraction.util.state.ResultState
 import isfaaghyth.app.abstraction.util.thread.SchedulerProvider
 import isfaaghyth.app.data.entity.Credits
 import isfaaghyth.app.data.entity.Movie
+import isfaaghyth.app.data.entity.Movies
 import isfaaghyth.app.data.entity.TVShow
 import isfaaghyth.app.movie_details.domain.MovieDetailUseCase
 import kotlinx.coroutines.Dispatchers
@@ -47,27 +48,34 @@ class MovieDetailViewModel @Inject constructor(
     val state: LiveData<LoaderState>
         get() = _state
 
+    private val _recommendedMovies = MutableLiveData<Movies>()
+    val recommendedMovies: LiveData<Movies>
+        get() = _recommendedMovies
+
     override fun getMovieDetail(movieId: String) {
         FetchingIdlingResource.begin()
         _state.value = LoaderState.ShowLoading
         launch {
-            val workMovieDetail = async { useCase.getMovieDetail(movieId) }
             val workMovieCredit = async { useCase.getMovieCredits(movieId) }
+            val workMovieDetail = async { useCase.getMovieDetail(movieId) }
 
-            val resultDetail = workMovieDetail.await()
             val resultCredit = workMovieCredit.await()
+            val resultDetail = workMovieDetail.await()
 
             withContext(Dispatchers.Main) {
                 FetchingIdlingResource.complete()
                 _state.value = LoaderState.HideLoading
-                when (resultDetail) {
-                    is ResultState.Success -> _movieDetail.postValue(resultDetail.data)
-                    is ResultState.Error -> _error.postValue(resultDetail.error)
-                }
-
                 when (resultCredit) {
                     is ResultState.Success -> _movieCredits.postValue(resultCredit.data)
                     is ResultState.Error -> _error.postValue(resultCredit.error)
+                }
+
+                when (resultDetail) {
+                    is ResultState.Success -> {
+                        _movieDetail.postValue(resultDetail.data)
+                        getMoviesByGenre(resultDetail.data.getAllGenres())
+                    }
+                    is ResultState.Error -> _error.postValue(resultDetail.error)
                 }
             }
         }
@@ -83,6 +91,20 @@ class MovieDetailViewModel @Inject constructor(
                 _state.value = LoaderState.HideLoading
                 when (result) {
                     is ResultState.Success -> _tvDetail.postValue(result.data)
+                    is ResultState.Error -> _error.postValue(result.error)
+                }
+            }
+        }
+    }
+
+    private fun getMoviesByGenre(genreIds: String) {
+        FetchingIdlingResource.begin()
+        launch {
+            val result = useCase.getMoviesByGenre(genreIds)
+            withContext(Dispatchers.Main) {
+                FetchingIdlingResource.complete()
+                when (result) {
+                    is ResultState.Success -> _recommendedMovies.postValue(result.data)
                     is ResultState.Error -> _error.postValue(result.error)
                 }
             }

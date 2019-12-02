@@ -19,23 +19,34 @@ data class Movie(
     @Expose @SerializedName("backdrop_path") val backdropPath: String = "",
     @Expose @SerializedName("vote_count") val voteCount: Int = 0,
     @Expose @SerializedName("vote_average") val voteAverage: Float = 0f,
-    @Expose @SerializedName("release_date") val releaseDate: String = ""
-): Parcelable {
+    @Expose @SerializedName("release_date") val releaseDate: String = "",
+    @Expose @SerializedName("genres") val genres: List<Genre> = listOf()
+) : Parcelable {
 
     fun bannerUrl() = "${BuildConfig.IMAGE_URL}$backdropPath"
 
     fun posterUrl() = "${BuildConfig.IMAGE_URL}$posterPath"
 
+    fun getAllGenres(): String {
+        val stringBuilder = StringBuilder()
+
+        genres.forEach {
+            stringBuilder.append("${it.id},")
+        }
+
+        return stringBuilder.toString()
+    }
+
     constructor(parcel: Parcel) : this(
-        parcel.readString()?: "",
-        parcel.readString()?: "",
-        parcel.readString()?: "",
-        parcel.readString()?: "",
-        parcel.readString()?: "",
-        parcel.readString()?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
         parcel.readInt(),
         parcel.readFloat(),
-        parcel.readString()?: ""
+        parcel.readString() ?: ""
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -64,3 +75,8 @@ data class Movie(
         }
     }
 }
+
+data class Genre(
+    @Expose @SerializedName("id") val id: Int = 0,
+    @Expose @SerializedName("name") val name: String = ""
+)

@@ -2,6 +2,7 @@ package isfaaghyth.app.data.repository.movie_detail
 
 import isfaaghyth.app.data.entity.Credits
 import isfaaghyth.app.data.entity.Movie
+import isfaaghyth.app.data.entity.Movies
 import isfaaghyth.app.data.entity.TVShow
 import isfaaghyth.app.data.routes.NetworkServices
 import retrofit2.Response
@@ -21,5 +22,9 @@ class MovieDetailRepositoryImpl @Inject constructor(
 
     override suspend fun getMovieCredits(movieId: String): Response<Credits> {
         return service.getMovieCredits(movieId)
+    }
+
+    override suspend fun getMoviesByGenre(genreIds: String): Response<Movies> {
+        return service.getMovieCreditsByGenre(genreIds)
     }
 }

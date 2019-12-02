@@ -1,6 +1,7 @@
 package isfaaghyth.app.movie_details.ui
 
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -18,11 +19,13 @@ import isfaaghyth.app.abstraction.util.ext.toast
 import isfaaghyth.app.abstraction.util.state.LoaderState
 import isfaaghyth.app.data.entity.MovieCast
 import isfaaghyth.app.data.entity.MovieDetail
+import isfaaghyth.app.data.entity.Movies
 import isfaaghyth.app.data.mapper.MovieCastMapper
 import isfaaghyth.app.data.mapper.MovieDetailMapper
 import isfaaghyth.app.movie_details.R
 import isfaaghyth.app.movie_details.di.DaggerMovieDetailComponent
 import isfaaghyth.app.movie_details.ui.adapter.MovieCastAdapter
+import isfaaghyth.app.movie_details.ui.adapter.RecommendedMovieAdapter
 import kotlinx.android.synthetic.main.activity_movie_detail.*
 import javax.inject.Inject
 
@@ -78,6 +81,10 @@ class MovieDetailActivity: BaseActivity() {
             showCast(MovieCastMapper.transformFromCastList(credits.cast))
         })
 
+        viewModel.recommendedMovies.observe(this, Observer { movies ->
+            showRecommended(movies)
+        })
+
         viewModel.tvDetail.observe(this, Observer { tv ->
             showDetail(MovieDetailMapper.mapFromTVShow(tv))
         })
@@ -100,6 +107,16 @@ class MovieDetailActivity: BaseActivity() {
 
         rvMovieCast.layoutManager = layoutManager
         rvMovieCast.adapter = adapter
+    }
+
+    private fun showRecommended(movies: Movies) {
+        recommendedLabel.visibility = View.VISIBLE
+
+        val layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        val adapter = RecommendedMovieAdapter(movies.resultsIntent)
+
+        rvRecommendedMovies.layoutManager = layoutManager
+        rvRecommendedMovies.adapter = adapter
     }
 
     override fun initInjector() {

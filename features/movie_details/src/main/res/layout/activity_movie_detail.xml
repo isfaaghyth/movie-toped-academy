@@ -195,6 +195,32 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/rvMovieCast"/>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_margin="10dp"
+                        android:background="#30000000"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:ellipsize="none"
+                        android:gravity="center_vertical"
+                        android:scrollHorizontally="false"
+                        android:text="Recommended Movies"
+                        android:id="@+id/recommendedLabel"
+                        android:paddingBottom="6dp"
+                        android:visibility="gone"
+                        tools:visibility="visible"
+                        android:textSize="16sp"
+                        android:textStyle="bold"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/rvRecommendedMovies"/>
+
                 </LinearLayout>
 
             </ScrollView>

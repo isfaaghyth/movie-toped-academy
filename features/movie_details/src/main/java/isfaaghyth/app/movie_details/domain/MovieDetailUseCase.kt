@@ -5,6 +5,7 @@ import isfaaghyth.app.abstraction.util.ext.fetchState
 import isfaaghyth.app.abstraction.util.state.ResultState
 import isfaaghyth.app.data.entity.Credits
 import isfaaghyth.app.data.entity.Movie
+import isfaaghyth.app.data.entity.Movies
 import isfaaghyth.app.data.entity.TVShow
 import isfaaghyth.app.data.repository.movie_detail.MovieDetailRepository
 import retrofit2.Response
@@ -32,6 +33,14 @@ class MovieDetailUseCase @Inject constructor(val repository: MovieDetailReposito
         return fetchState {
             wrapperDetail {
                 repository.getMovieCredits(movieId)
+            }
+        }
+    }
+
+    suspend fun getMoviesByGenre(genreIds: String): ResultState<Movies> {
+        return fetchState {
+            wrapperDetail {
+                repository.getMoviesByGenre(genreIds)
             }
         }
     }
