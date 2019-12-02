@@ -4,6 +4,7 @@ import isfaaghyth.app.data.entity.Credits
 import isfaaghyth.app.data.entity.Movie
 import isfaaghyth.app.data.entity.RateMovieParam
 import isfaaghyth.app.data.entity.RateMovieResponse
+import isfaaghyth.app.data.entity.Movies
 import isfaaghyth.app.data.entity.TVShow
 import isfaaghyth.app.data.routes.NetworkServices
 import retrofit2.Response
@@ -28,4 +29,7 @@ class MovieDetailRepositoryImpl @Inject constructor(
         return service.rateMovie(movieId, starRating, guestId)
     }
 
+    override suspend fun getMoviesByGenre(genreIds: String): Response<Movies> {
+        return service.getMovieCreditsByGenre(genreIds)
+    }
 }
