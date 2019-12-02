@@ -1,9 +1,6 @@
 package isfaaghyth.app.data.routes
 
-import isfaaghyth.app.data.entity.Movie
-import isfaaghyth.app.data.entity.Movies
-import isfaaghyth.app.data.entity.TVShow
-import isfaaghyth.app.data.entity.TVShows
+import isfaaghyth.app.data.entity.*
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -20,6 +17,11 @@ interface NetworkServices {
     suspend fun getMovieDetail(
         @Path("movie_id") movieId: String
     ): Response<Movie>
+
+    @GET("movie/{movie_id}/credits")
+    suspend fun getMovieCredits(
+        @Path("movie_id") movieId: String
+    ): Response<Credits>
 
     @GET("tv/{movie_id}")
     suspend fun getTvDetail(

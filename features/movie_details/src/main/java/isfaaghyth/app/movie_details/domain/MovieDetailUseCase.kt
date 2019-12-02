@@ -1,8 +1,9 @@
 package isfaaghyth.app.movie_details.domain
 
-import isfaaghyth.app.abstraction.util.state.ResultState
 import isfaaghyth.app.abstraction.util.UNSUCCESSFUL_MESSAGE
 import isfaaghyth.app.abstraction.util.ext.fetchState
+import isfaaghyth.app.abstraction.util.state.ResultState
+import isfaaghyth.app.data.entity.Credits
 import isfaaghyth.app.data.entity.Movie
 import isfaaghyth.app.data.entity.TVShow
 import isfaaghyth.app.data.repository.movie_detail.MovieDetailRepository
@@ -23,6 +24,14 @@ class MovieDetailUseCase @Inject constructor(val repository: MovieDetailReposito
         return fetchState {
             wrapperDetail {
                 repository.getTVShowDetail(movieId)
+            }
+        }
+    }
+
+    suspend fun getMovieCredits(movieId: String): ResultState<Credits> {
+        return fetchState {
+            wrapperDetail {
+                repository.getMovieCredits(movieId)
             }
         }
     }
