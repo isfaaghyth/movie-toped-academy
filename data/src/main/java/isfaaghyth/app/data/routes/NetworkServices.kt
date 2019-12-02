@@ -1,4 +1,4 @@
-package isfaaghyth.app.data.service
+package isfaaghyth.app.data.routes
 
 import isfaaghyth.app.data.entity.*
 import retrofit2.Response
@@ -16,6 +16,11 @@ interface NetworkServices {
     suspend fun getMovieDetail(
         @Path("movie_id") movieId: String
     ): Response<Movie>
+
+    @GET("movie/{movie_id}/credits")
+    suspend fun getMovieCredits(
+        @Path("movie_id") movieId: String
+    ): Response<Credits>
 
     @GET("tv/{movie_id}")
     suspend fun getTvDetail(

@@ -7,12 +7,14 @@ import isfaaghyth.app.abstraction.helper.FetchingIdlingResource
 import isfaaghyth.app.abstraction.util.state.LoaderState
 import isfaaghyth.app.abstraction.util.state.ResultState
 import isfaaghyth.app.abstraction.util.thread.SchedulerProvider
+import isfaaghyth.app.data.entity.Credits
 import isfaaghyth.app.data.entity.Movie
 import isfaaghyth.app.data.entity.RateMovieParam
 import isfaaghyth.app.data.entity.RateMovieResponse
 import isfaaghyth.app.data.entity.TVShow
 import isfaaghyth.app.movie_details.domain.MovieDetailUseCase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -26,11 +28,15 @@ interface MovieDetailContract {
 class MovieDetailViewModel @Inject constructor(
     private val useCase: MovieDetailUseCase,
     dispatcher: SchedulerProvider
-): BaseViewModel(dispatcher), MovieDetailContract {
+) : BaseViewModel(dispatcher), MovieDetailContract {
 
     private val _movieDetail = MutableLiveData<Movie>()
     val movieDetail: LiveData<Movie>
         get() = _movieDetail
+
+    private val _movieCredits = MutableLiveData<Credits>()
+    val movieCredits: LiveData<Credits>
+        get() = _movieCredits
 
     private val _tvDetail = MutableLiveData<TVShow>()
     val tvDetail: LiveData<TVShow>
@@ -52,13 +58,23 @@ class MovieDetailViewModel @Inject constructor(
         FetchingIdlingResource.begin()
         _state.value = LoaderState.ShowLoading
         launch {
-            val result = useCase.getMovieDetail(movieId)
+            val workMovieDetail = async { useCase.getMovieDetail(movieId) }
+            val workMovieCredit = async { useCase.getMovieCredits(movieId) }
+
+            val resultDetail = workMovieDetail.await()
+            val resultCredit = workMovieCredit.await()
+
             withContext(Dispatchers.Main) {
                 FetchingIdlingResource.complete()
                 _state.value = LoaderState.HideLoading
-                when (result) {
-                    is ResultState.Success -> _movieDetail.postValue(result.data)
-                    is ResultState.Error -> _error.postValue(result.error)
+                when (resultDetail) {
+                    is ResultState.Success -> _movieDetail.postValue(resultDetail.data)
+                    is ResultState.Error -> _error.postValue(resultDetail.error)
+                }
+
+                when (resultCredit) {
+                    is ResultState.Success -> _movieCredits.postValue(resultCredit.data)
+                    is ResultState.Error -> _error.postValue(resultCredit.error)
                 }
             }
         }

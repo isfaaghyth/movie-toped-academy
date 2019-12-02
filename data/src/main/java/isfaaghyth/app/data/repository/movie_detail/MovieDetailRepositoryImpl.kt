@@ -1,16 +1,17 @@
 package isfaaghyth.app.data.repository.movie_detail
 
+import isfaaghyth.app.data.entity.Credits
 import isfaaghyth.app.data.entity.Movie
 import isfaaghyth.app.data.entity.RateMovieParam
 import isfaaghyth.app.data.entity.RateMovieResponse
 import isfaaghyth.app.data.entity.TVShow
-import isfaaghyth.app.data.service.NetworkServices
+import isfaaghyth.app.data.routes.NetworkServices
 import retrofit2.Response
 import javax.inject.Inject
 
 class MovieDetailRepositoryImpl @Inject constructor(
     private val service: NetworkServices
-): MovieDetailRepository {
+) : MovieDetailRepository {
 
     override suspend fun getMovieDetail(movieId: String): Response<Movie> {
         return service.getMovieDetail(movieId)
@@ -20,6 +21,9 @@ class MovieDetailRepositoryImpl @Inject constructor(
         return service.getTvDetail(movieId)
     }
 
+    override suspend fun getMovieCredits(movieId: String): Response<Credits> {
+        return service.getMovieCredits(movieId)
+    }
     override suspend fun rateMovie(movieId: String, starRating: RateMovieParam): Response<RateMovieResponse> {
         return service.rateMovie(movieId, starRating)
     }

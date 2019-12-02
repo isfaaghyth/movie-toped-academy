@@ -1,11 +1,12 @@
 package isfaaghyth.app.movie_details.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.deeplinkdispatch.DeepLink
 import isfaaghyth.app.abstraction.base.BaseActivity
 import isfaaghyth.app.abstraction.util.AppLink.MovieDetail.MOVIE_DETAIL
@@ -16,10 +17,13 @@ import isfaaghyth.app.abstraction.util.ext.load
 import isfaaghyth.app.abstraction.util.ext.show
 import isfaaghyth.app.abstraction.util.ext.toast
 import isfaaghyth.app.abstraction.util.state.LoaderState
+import isfaaghyth.app.data.entity.MovieCast
 import isfaaghyth.app.data.entity.MovieDetail
+import isfaaghyth.app.data.mapper.MovieCastMapper
 import isfaaghyth.app.data.mapper.MovieDetailMapper
 import isfaaghyth.app.movie_details.R
 import isfaaghyth.app.movie_details.di.DaggerMovieDetailComponent
+import isfaaghyth.app.movie_details.ui.adapter.MovieCastAdapter
 import kotlinx.android.synthetic.main.activity_movie_detail.*
 import javax.inject.Inject
 
@@ -78,6 +82,10 @@ class MovieDetailActivity: BaseActivity(), MovieRatingBottomSheet.BottomSheetLis
             showDetail(MovieDetailMapper.mapFromMovie(movie))
         })
 
+        viewModel.movieCredits.observe(this, Observer { credits ->
+            showCast(MovieCastMapper.transformFromCastList(credits.cast))
+        })
+
         viewModel.tvDetail.observe(this, Observer { tv ->
             showDetail(MovieDetailMapper.mapFromTVShow(tv))
         })
@@ -90,9 +98,9 @@ class MovieDetailActivity: BaseActivity(), MovieRatingBottomSheet.BottomSheetLis
     }
 
     private fun showDetail(detail: MovieDetail) {
-        imgBanner.load(banner)
+        imgBanner.load(detail.backdropPath)
         imgPoster.load(detail.posterPath)
-        txtMovieName.text = title
+        txtMovieName.text = detail.title
         txtContent.text = detail.overview
         txtRating.text = detail.voteCount.toString()
         txtVote.text = detail.voteAverage.toString()
@@ -112,6 +120,14 @@ class MovieDetailActivity: BaseActivity(), MovieRatingBottomSheet.BottomSheetLis
     override fun onButtonClicked(stars: Float) {
         if (bottomSheet.isVisible) bottomSheet.dismiss()
         viewModel.rateMovie(movieId, stars.toInt() * 2)
+    }
+
+    private fun showCast(movieCast: List<MovieCast>) {
+        val layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        val adapter = MovieCastAdapter(movieCast)
+
+        rvMovieCast.layoutManager = layoutManager
+        rvMovieCast.adapter = adapter
     }
 
     override fun initInjector() {
