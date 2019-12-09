@@ -9,6 +9,7 @@ import isfaaghyth.app.abstraction.util.state.ResultState
 import isfaaghyth.app.abstraction.util.thread.SchedulerProvider
 import isfaaghyth.app.abstraction.util.session.GuestSessionResponse
 import isfaaghyth.app.data.entity.Movie
+import isfaaghyth.app.movies.domain.GetGuestSessionUseCase
 import isfaaghyth.app.movies.domain.MovieUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,6 +23,7 @@ interface MovieContract {
 
 class MovieViewModel @Inject constructor(
     private val useCase: MovieUseCase,
+    private val guestSessionUseCase: GetGuestSessionUseCase,
     dispatcher: SchedulerProvider
 ): BaseViewModel(dispatcher), MovieContract {
 
@@ -65,7 +67,7 @@ class MovieViewModel @Inject constructor(
         FetchingIdlingResource.begin()
         _state.value = LoaderState.ShowLoading
         launch {
-            val result = useCase.getGuestSessionId()
+            val result = guestSessionUseCase.getGuestSessionId()
             withContext(Dispatchers.Main) {
                 FetchingIdlingResource.complete()
                 _state.value = LoaderState.HideLoading

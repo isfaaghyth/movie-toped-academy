@@ -33,7 +33,9 @@ class MovieFragment : Fragment() {
         MovieAdapter(movieData)
     }
 
-    lateinit var sessionUtil: SessionUtil
+    private val sessionUtil: SessionUtil by lazy {
+        SessionUtil(requireContext())
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(contentView(), container, false)
@@ -59,7 +61,6 @@ class MovieFragment : Fragment() {
 
     private fun getGuestSessionId() {
         activity?.let {
-            sessionUtil = SessionUtil(it)
             val guestSessionExpiredTime = sessionUtil.getSessionExpiredTime()
             if (guestSessionExpiredTime == null || guestSessionExpiredTime.before(DateUtil.now())) {
                 viewModel.getGuestSessionId()

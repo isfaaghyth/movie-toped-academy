@@ -21,12 +21,4 @@ class MovieUseCase @Inject constructor(private val repository: MovieRepository) 
         }
     }
 
-    suspend fun getGuestSessionId(): ResultState<GuestSessionResponse> {
-        return fetchState {
-            val response = repository.getGuestSessionId()
-            if (response.isSuccessful) ResultState.Success(response.body()!!)
-            else ResultState.Error(UNSUCCESSFUL_MESSAGE)
-        }
-    }
-
 }
