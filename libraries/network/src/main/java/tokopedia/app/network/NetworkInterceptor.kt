@@ -9,10 +9,16 @@ class NetworkInterceptor: Interceptor {
         var request = chain.request()
         val url = request.url()
             .newBuilder()
-            .addQueryParameter("api_key", BuildConfig.API_KEY)
+            .addQueryParameter(API_KEY, BuildConfig.API_KEY)
             .build()
-        request = request.newBuilder().url(url).build()
+        request = request.newBuilder()
+            .url(url)
+            .build()
         return chain.proceed(request)
+    }
+
+    companion object {
+        private const val API_KEY = "api_key"
     }
 
 }

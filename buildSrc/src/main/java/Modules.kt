@@ -4,18 +4,16 @@
  */
 
 object Modules {
-    //app level
+    //parent app
     val app = ":app"
 
-    //feature level
-    val movies = ":features:movies"
-    val tvshows = ":features:tvshows"
-    val movieDetail = ":features:movie_details"
+    //feature
+    //TODO
 
-    //libraries level
+    //libraries
     val network = ":libraries:network"
     val abstraction = ":libraries:abstraction"
 
-    //data level
+    //data
     val data = ":data"
 }

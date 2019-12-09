@@ -5,4 +5,5 @@ import kotlinx.coroutines.Dispatchers
 
 class ApplicationSchedulerProvider: SchedulerProvider {
     override fun ui(): CoroutineDispatcher = Dispatchers.Main
+    override fun io(): CoroutineDispatcher = Dispatchers.IO
 }

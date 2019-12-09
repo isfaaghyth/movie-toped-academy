@@ -10,15 +10,11 @@ object MovieCastMapper {
 
     fun transformFromCastList(cast: List<Cast>): List<MovieCast> {
         val list = arrayListOf<MovieCast>()
-        cast.forEach {
-            list.add(transformFromCast(it))
-        }
+        cast.forEach { list.add(transformFromCast(it)) }
         return list
     }
 
     private fun transformFromCast(cast: Cast): MovieCast =
-        MovieCast(
-            cast.getProfileUrl(),
-            cast.name
-        )
+        MovieCast(cast.getProfileUrl(), cast.name)
+
 }

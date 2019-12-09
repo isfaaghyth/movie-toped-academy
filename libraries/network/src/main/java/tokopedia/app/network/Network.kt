@@ -9,27 +9,27 @@ import java.util.concurrent.TimeUnit
 
 object Network {
 
-    fun retrofitClient(url: String = BuildConfig.MOVIE_URL): Retrofit {
+    fun builder(url: String = BuildConfig.MOVIE_URL): Retrofit {
         return Retrofit.Builder()
             .baseUrl(url)
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .addConverterFactory(GsonConverterFactory.create())
-            .client(okHttpClient())
+            .client(client())
             .build()
     }
 
-    private fun okHttpClient(): OkHttpClient {
+    private fun client(): OkHttpClient {
         return OkHttpClient.Builder()
             .retryOnConnectionFailure(true)
             .addInterceptor(NetworkInterceptor())
-            .addInterceptor(createLoggingInterceptor())
+            .addInterceptor(loggingInterceptor())
             .pingInterval(30, TimeUnit.SECONDS)
             .readTimeout(1, TimeUnit.MINUTES)
             .connectTimeout(1, TimeUnit.MINUTES)
             .build()
     }
 
-    private fun createLoggingInterceptor(): HttpLoggingInterceptor {
+    private fun loggingInterceptor(): HttpLoggingInterceptor {
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
         return interceptor

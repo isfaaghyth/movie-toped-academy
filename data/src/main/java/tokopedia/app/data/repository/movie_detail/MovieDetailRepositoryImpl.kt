@@ -1,16 +1,10 @@
 package tokopedia.app.data.repository.movie_detail
 
-import tokopedia.app.data.entity.Credits
-import tokopedia.app.data.entity.Movie
-import tokopedia.app.data.entity.RateMovieParam
-import tokopedia.app.data.entity.RateMovieResponse
-import tokopedia.app.data.entity.Movies
-import tokopedia.app.data.entity.TVShow
-import tokopedia.app.data.routes.NetworkServices
 import retrofit2.Response
-import javax.inject.Inject
+import tokopedia.app.data.entity.*
+import tokopedia.app.data.routes.NetworkServices
 
-class MovieDetailRepositoryImpl @Inject constructor(
+class MovieDetailRepositoryImpl constructor(
     private val service: NetworkServices
 ) : MovieDetailRepository {
 

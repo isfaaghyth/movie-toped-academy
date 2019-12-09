@@ -39,36 +39,8 @@ dependencies {
     implementation Android.constraintLayout
     implementation Android.design
 
-    //deeplink
-    implementation Misc.deeplink
-    kapt Misc.deeplinkProcessor
-
-    //dependency injection
-    implementation Dagger.dagger
-    implementation Dagger.android
-    kapt Dagger.compiler
-    kapt Dagger.processor
-
-    //testing
-    testImplementation Testing.jUnit
-    testImplementation Testing.mockito
-    testImplementation Testing.mockKtRunner
-    androidTestImplementation Testing.coreTesting
-    androidTestImplementation Testing.testRunner
-    androidTestImplementation Testing.espresso
-    androidTestImplementation Testing.espressoContrib
-    androidTestImplementation Testing.runner
-    androidTestImplementation Testing.rules
-    androidTestImplementation Testing.core
-    androidTestImplementation Testing.espressoIdleResources
-    androidTestImplementation Testing.extJunit
-    androidTestImplementation Testing.extTruth
-
     /* Feature Module should add below */
     implementation project(Modules.abstraction)
-    implementation project(Modules.movieDetail)
-    implementation project(Modules.tvshows)
-    implementation project(Modules.movies)
 }
 
 repositories {

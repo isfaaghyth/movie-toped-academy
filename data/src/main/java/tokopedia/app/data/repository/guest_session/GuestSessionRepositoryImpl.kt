@@ -1,15 +1,14 @@
 package tokopedia.app.data.repository.guest_session
 
-import tokopedia.app.abstraction.util.session.GuestSessionResponse
-import tokopedia.app.data.routes.NetworkServices
 import retrofit2.Response
-import javax.inject.Inject
+import tokopedia.app.data.entity.GuestSession
+import tokopedia.app.data.routes.NetworkServices
 
-class GuestSessionRepositoryImpl @Inject constructor(
+class GuestSessionRepositoryImpl constructor(
     private val service: NetworkServices
 ): GuestSessionRepository {
 
-    override suspend fun getGuestSessionId(): Response<GuestSessionResponse> {
+    override suspend fun getGuestSessionId(): Response<GuestSession> {
         return service.getGuestSessionId()
     }
 

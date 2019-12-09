@@ -16,10 +16,7 @@ interface NetworkServices {
     @GET("authentication/guest_session/new")
     suspend fun getGuestSessionId(
         @Query("api_key") apiKey: String = BuildConfig.API_KEY
-    ): Response<tokopedia.app.abstraction.util.session.GuestSessionResponse>
-
-    @GET("tv/popular")
-    suspend fun getPopularTVShow(): Response<TVShows>
+    ): Response<GuestSession>
 
     @GET("movie/{movie_id}")
     suspend fun getMovieDetail(
@@ -32,7 +29,9 @@ interface NetworkServices {
     ): Response<Credits>
 
     @GET("discover/movie")
-    suspend fun getMovieCreditsByGenre(@Query("with_genres") genres: String): Response<Movies>
+    suspend fun getMovieCreditsByGenre(
+        @Query("with_genres") genres: String
+    ): Response<Movies>
 
     @GET("tv/{movie_id}")
     suspend fun getTvDetail(
@@ -43,6 +42,7 @@ interface NetworkServices {
     suspend fun rateMovie(
         @Path("movie_id") movieId: String,
         @Body value: RateMovieParam,
-        @Query("guest_session_id") guestSessionId: String): Response<RateMovieResponse>
+        @Query("guest_session_id") guestSessionId: String
+    ): Response<RateMovieResponse>
 
 }

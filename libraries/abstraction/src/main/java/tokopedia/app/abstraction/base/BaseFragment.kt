@@ -1,11 +1,14 @@
 package tokopedia.app.abstraction.base
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import tokopedia.app.abstraction.util.view.KeyboardUtils
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import tokopedia.app.abstraction.util.ext.toast
+import tokopedia.app.abstraction.util.view.KeyboardUtils
 
-abstract class BaseActivity: AppCompatActivity(), BaseView {
+abstract class BaseFragment: Fragment(), BaseView  {
 
     /**
      * lifecycle method
@@ -13,21 +16,20 @@ abstract class BaseActivity: AppCompatActivity(), BaseView {
      * @method initView()depe
      */
     abstract fun contentView(): Int
-    abstract fun initView()
     abstract fun initObservable()
-
-    /**
-     * (optional, use it if needed)
-     */
-    protected lateinit var savedInstanceState: Bundle
+    abstract fun initView()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (savedInstanceState != null) {
-            this.savedInstanceState = savedInstanceState
-        }
-        setContentView(contentView())
         initObservable()
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(contentView(), container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initView()
     }
 
@@ -43,7 +45,7 @@ abstract class BaseActivity: AppCompatActivity(), BaseView {
      * hide keyboard layout
      */
     override fun hideKeyboard() {
-        return KeyboardUtils().hide(this)
+        return KeyboardUtils().hide(activity!!)
     }
 
 }

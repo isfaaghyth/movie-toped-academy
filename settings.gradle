@@ -2,9 +2,7 @@
 include Modules.app
 
 //features
-include Modules.movies
-include Modules.tvshows
-include Modules.movieDetail
+//TODO
 
 //libraries
 include Modules.network
