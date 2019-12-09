@@ -1,6 +1,6 @@
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
-    package="isfaaghyth.app.movie_details">
+    package="tokopedia.app.movie_details">
 
     <uses-permission android:name="android.permission.INTERNET"/>
 

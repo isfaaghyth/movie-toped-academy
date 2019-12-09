@@ -1,11 +1,11 @@
 /**
- * Created by isfaaghyth on 31/07/19.
- * github: @isfaaghyth
+ * Created by tokopedia on 31/07/19.
+ * github: @tokopedia
  */
 
 object ApplicationId {
-    const val abstraction = "isfaaghyth.app.abstraction"
-    const val id = "isfaaghyth.app.jetmovie"
+    const val abstraction = "tokopedia.app.abstraction"
+    const val id = "tokopedia.app.jetmovie"
 }
 
 object Releases {
