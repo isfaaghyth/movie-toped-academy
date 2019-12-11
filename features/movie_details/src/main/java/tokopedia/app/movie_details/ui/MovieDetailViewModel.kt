@@ -18,6 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import tokopedia.app.movie_details.domain.RateMovieUseCase
 import javax.inject.Inject
 
 interface MovieDetailContract {
@@ -28,6 +29,7 @@ interface MovieDetailContract {
 
 class MovieDetailViewModel @Inject constructor(
     private val useCase: MovieDetailUseCase,
+    private val rateMovieDetailUseCase: RateMovieUseCase,
     dispatcher: SchedulerProvider
 ) : BaseViewModel(dispatcher), MovieDetailContract {
 
@@ -108,7 +110,7 @@ class MovieDetailViewModel @Inject constructor(
         FetchingIdlingResource.begin()
         _state.value = LoaderState.ShowLoading
         launch {
-            val result = useCase.rateMovie(movieId, RateMovieParam(starRating), guestId)
+            val result = rateMovieDetailUseCase.rateMovie(movieId, RateMovieParam(starRating), guestId)
             withContext(Dispatchers.Main) {
                 FetchingIdlingResource.complete()
                 _state.value = LoaderState.HideLoading
